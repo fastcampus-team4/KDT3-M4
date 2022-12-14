@@ -8,7 +8,6 @@ import SignUp from './components/signup/SignUp';
 import Slider from './components/KV/Slider';
 import ProductDetail from './pages/ProductDetail';
 import Category from './pages/Category';
-import Search from './pages/Search';
 
 const router = createBrowserRouter([
   {
@@ -46,10 +45,6 @@ const router = createBrowserRouter([
       {
         path: 'products/:id',
         element: <ProductDetail />,
-      },
-      {
-        path: 'search/:title',
-        element: <Search />,
       },
     ],
   },
