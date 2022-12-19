@@ -4,28 +4,19 @@ import { ACCOUNT_URL, HEADERS_USER, API_URL, HEADERS } from '../data/API';
 import { userInfoState, alternativeImg, getCookie, deleteCookie } from '../data/LoginData';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useState, useEffect } from 'react';
-import { async } from './../components/total-product/fetch';
 
 const MyBuy = () => {
   const { state: buyProduct } = useLocation();
   // buyProduct가 여러개일 경우 products로 할당함, 아닐 경우 product에 할당
   const products = buyProduct && buyProduct.length > 0 && buyProduct;
   const product = buyProduct && buyProduct.length === undefined && buyProduct;
+  console.log('products:', products);
+  console.log('product:', product);
 
   const accessToken = getCookie('accessToken');
   const [accountData, setAccountData] = useState([]);
   const [accountId, setAccountId] = useState('');
 
-  const quantity = products.for;
-
-  console.log('products 의 개수:', quantity);
-
-  // console.log('products:', products);
-  // console.log('product:', product);
-  // console.log('상품 id:', product.id);
-  // console.log('계좌 id:', accountId);
-
-  // 계좌 조회 api
   const getAccountInfo = async () => {
     try {
       const res = await fetch(ACCOUNT_URL, {
@@ -33,7 +24,7 @@ const MyBuy = () => {
         headers: { ...HEADERS_USER, Authorization: accessToken },
       });
       const { totalBalance, accounts } = await res.json();
-      // console.log(accounts);
+      console.log(accounts);
 
       if (accounts) {
         setAccountData(accounts);
@@ -46,26 +37,24 @@ const MyBuy = () => {
     getAccountInfo();
   }, []);
 
-  // 계좌 버튼 클릭 시 계좌 id 넣어주기
-  const onClick = (id) => {
+  function onClick(id, name) {
     setAccountId(id);
-    console.log('결제할 은행 : ', id);
-  };
+    console.log('결제할 은행 : ', name);
+  }
 
   // 결제 함수
-  const getBuy = async (productId, accountId) => {
+  const getBuy = async () => {
     try {
       const res = await fetch(API_URL + 'products/buy', {
         method: 'POST',
         headers: { ...HEADERS, Authorization: accessToken },
         body: JSON.stringify({
-          productId,
-          accountId,
+          productId: product.productId,
+          accountId: accountId,
         }),
       });
-      console.log(res);
-
       if (res.status === 200) {
+        alert('결제가 완료되었습니다.');
         return res;
       }
     } catch (error) {
@@ -73,20 +62,8 @@ const MyBuy = () => {
     }
   };
 
-  // 결제하기 클릭 시 결제 신청
   const onClickBuy = async () => {
-    if (products) {
-      products.forEach(async (product) => {
-        await getBuy(product.productId, accountId);
-      });
-      alert('결제가 완료되었습니다.');
-    }
-    // else if (products && ) {
-    // }
-    else {
-      await getBuy(product.id, accountId);
-      alert('결제가 완료되었습니다.');
-    }
+    getBuy();
   };
 
   // 객체로 저장해서
@@ -108,36 +85,18 @@ const MyBuy = () => {
           <p>수량</p>
           <p>금액</p>
         </li>
-        {product ? (
-          <li>
+        <li>
+          <div>
+            <img style={{ width: 150 }} src={product.photo} alt={product.title} />
             <div>
-              <img style={{ width: 150 }} src={product.photo} alt={product.title} />
-              <div>
-                <p>[스마트스토어] 프레시멘토</p>
-                <p>{product.title}</p>
-              </div>
+              <p>[스마트스토어] 프레시멘토</p>
+              <p>{product.title}</p>
             </div>
-            <p>프레시멘토</p>
-            <p>1개</p>
-            <p>{product.price?.toLocaleString()}원</p>
-          </li>
-        ) : null}
-        {products
-          ? products.map((product) => (
-              <li key={product.productId}>
-                <div>
-                  <img style={{ width: 150 }} src={product.photo} alt={product.title} />
-                  <div>
-                    <p>[스마트스토어] 프레시멘토</p>
-                    <p>{product.title}</p>
-                  </div>
-                </div>
-                <p>프레시멘토</p>
-                <p>{product.quantity}개</p>
-                <p>{product.price?.toLocaleString()}원</p>
-              </li>
-            ))
-          : null}
+          </div>
+          <p>프레시멘토</p>
+          <p>1개(quantity)</p>
+          <p>{product.price?.toLocaleString()}원</p>
+        </li>
       </ul>
       <div style={{ display: 'flex' }}></div>
 
@@ -210,7 +169,7 @@ const MyBuy = () => {
 
       {/* 결제하기 */}
       <div>
-        <button onClick={onClickBuy}>결제하기</button>
+        <button onClick={() => onClickBuy()}>결제하기</button>
       </div>
     </div>
   );
