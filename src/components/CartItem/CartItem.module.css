@@ -1,7 +1,16 @@
-.item {
+.item,
+.soldout {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   border-bottom: 1px solid var(--color-light-grey);
+}
+
+.soldout {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(77, 77, 77, 0.5);
+  opacity: 0.5;
+  filter: brightness(70%);
 }
 
 .itme__info {
@@ -11,17 +20,30 @@
   border-right: 1px solid var(--color-light-grey);
 }
 
+.itme__info .checkbox {
+  margin-right: 1rem;
+}
+
+.item__desciption {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+}
+
 .itme__info .image {
   width: 6rem;
   border-radius: 5px;
-  margin: 0 1rem;
+  margin-right: 1rem;
 }
 
 .itme__info .card {
   display: flex;
-  flex-basis: 100%;
   justify-content: space-between;
   align-items: center;
+  flex-basis: 100%;
+}
+
+.itme__info .cartInfo {
 }
 
 .itme__info .title,
@@ -31,6 +53,7 @@
 
 .itme__info .title {
   margin-bottom: 0.5rem;
+  flex-basis: 100%;
 }
 
 .itme__info .deleteBtn {
@@ -57,8 +80,8 @@
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
-  font-size: 2rem;
-  /* color: var(--color-light-grey); */
+  font-size: 1.5rem;
+  color: var(--color-light-grey);
 }
 
 .updateItem .icons:hover {
