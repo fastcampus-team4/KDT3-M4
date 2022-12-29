@@ -8,6 +8,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import LoadingModal from '../../components/ui/loading/LoadingModal';
 
 const Transactions = () => {
+  // public으로 경로변경하고 에러나서 일단 여기에 목업데이터 가져오는 함수 임시로 작성했습니다.
   const getData = async () => {
     return fetch('../data/mockUpTransactions.json', {
       headers: {
